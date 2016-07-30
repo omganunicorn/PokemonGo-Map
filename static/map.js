@@ -148,7 +148,7 @@ var StoreOptions = {
     default: false,
     type: StoreTypes.Boolean
   },
-  playSound: {
+  playCry: {
     default: false,
     type: StoreTypes.Boolean
   },
@@ -218,7 +218,7 @@ function initMap() {
       lat: center_lat,
       lng: center_lng
     },
-    zoom: 16,
+    zoom: 19,
     fullscreenControl: true,
     streetViewControl: false,
     mapTypeControl: true,
@@ -336,6 +336,7 @@ function initSidebar() {
   $('#geoloc-switch').prop('checked', Store.get('geoLocate'));
   $('#scanned-switch').prop('checked', Store.get('showScanned'));
   $('#sound-switch').prop('checked', Store.get('playSound'));
+  $('#cry-switch').prop('checked', Store.get('playCry'));
 
   var searchBox = new google.maps.places.SearchBox(document.getElementById('next-location'));
   $("#next-location").css("background-color", $('#geoloc-switch').prop('checked') ? "#e0e0e0" : "#ffffff");
@@ -567,6 +568,12 @@ function setupPokemonMarker(item, skipNotification, isBounceDisabled) {
     if (marker.animationDisabled != true) {
       marker.setAnimation(google.maps.Animation.BOUNCE);
     }
+  }
+
+  // Play pokemon cry sound
+  if (Store.get('playCry')) {
+    var cry = new Audio('/static/sounds/cries/' + item.pokemon_id + '.mp3');
+    cry.play();
   }
 
   addListeners(marker);
@@ -1179,7 +1186,7 @@ $(function() {
       });
     }
   }, 1000);
-  
+
   //Wipe off/restore map icons when switches are toggled
   function buildSwitchChangeListener(data, data_type, storageKey) {
     return function () {
@@ -1222,6 +1229,10 @@ $(function() {
 
   $('#sound-switch').change(function() {
     Store.set("playSound", this.checked);
+  });
+
+  $('#cry-switch').change(function() {
+    Store.set("playCry", this.checked);
   });
 
   $('#pokemon-icons').change(function() {
