@@ -1,12 +1,11 @@
-# PokemonGo Map![Python 2.7](https://img.shields.io/badge/python-2.7-blue.svg)
+# PokéAlert ![Python 2.7](https://img.shields.io/badge/python-2.7-blue.svg)
 
 
-Live visualization of all the pokemon (with option to show gyms and pokestops) in your area. This is a proof of concept that we can load all the pokemon visible nearby given a location. Currently runs on a Flask server displaying Google Maps with markers on it.
+Live Pokémon, Pokéstops and gym visualization map based on [AHAAAAAAA's project](https://github.com/AHAAAAAAA/PokemonGo-Map/wiki).
 
-Features: 
-
-* Shows Pokemon, Pokestops, and gyms with a clean GUI.
-* Notifications 
+Features from the original version:
+* Shows Pokemon, Pokéstops, and gyms with a clean GUI.
+* Notifications
 * Lure information
 * Multithreaded mode
 * Filters
@@ -15,33 +14,28 @@ Features:
 * DB storage (sqlite or mysql) of all found pokemon
 * Incredibly fast, efficient searching algorithm (compared to everything else available)
 
-[![Deploy](https://raw.githubusercontent.com/sych74/PokemonGo-Map-in-Cloud/master/images/deploy-to-jelastic.png)](https://jelastic.com/install-application/?manifest=https://raw.githubusercontent.com/sych74/PokemonGo-Map-in-Cloud/master/manifest.jps) [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://github.com/AHAAAAAAA/PokemonGo-Map/wiki/Heroku-Deployment) 
+Added features for this fork:
+* Cry sounds from the original Game Boy games for appearing Pokémon.
+* Sound notification for newly activated lures in PokéStops.
 
-#[Twitter] (https://twitter.com/PoGoMDev), [Website] (https://jz6.github.io/PoGoMap/)#
-
-![Map](https://raw.githubusercontent.com/AHAAAAAAA/PokemonGo-Map/master/static/cover.png)
-
+To do:
+* Add browser notifications for new active lures, and make the sound optional for the notification.
+* Add a few more lure notification sound options.
+* Change cries to be a sound option for specific Pokémon notifications.
+* Give the option to activate notifications for _any_ Pokémon except the ones on the exclude list.
 
 ## How to setup
 
-For instructions on how to setup and run the tool, please refer to the project [wiki](https://github.com/AHAAAAAAA/PokemonGo-Map/wiki), or the [video guide](https://www.youtube.com/watch?v=RJKAulPCkRI).
+For instructions on how to setup and run the tool, please refer to the original project's [wiki](https://github.com/AHAAAAAAA/PokemonGo-Map/wiki), or the [video guide](https://www.youtube.com/watch?v=RJKAulPCkRI).
 
-
-## Android Version
-
-There is an [Android port](https://github.com/omkarmoghe/Pokemap) in the works. All Android related prs and issues please refer to this [repo](https://github.com/omkarmoghe/Pokemap).
-
-## iOS Version
-
-There is an [iOS port](https://github.com/istornz/iPokeGo) in the works. All iOS related prs and issues please refer to this [repo](https://github.com/istornz/iPokeGo).
 
 ## Warnings
 
 Using this software is against the ToS of the game. You can get banned, use this tool at your own risk.
 
 
-## Contributions
-
-Please submit all pull requests to [develop](https://github.com/AHAAAAAAA/PokemonGo-Map/tree/develop) branch.
+## Credits
 
 Building off [tejado's python pgoapi](https://github.com/tejado/pgoapi), [Mila432](https://github.com/Mila432/Pokemon_Go_API)'s API, [leegao's additions](https://github.com/leegao/pokemongo-api-demo/tree/simulation) and [Flask-GoogleMaps](https://github.com/rochacbruno/Flask-GoogleMaps). Current version relies primarily on the pgoapi and Google Maps JS API.
+
+Sounds from [zhanxj's post on Reddit](https://www.reddit.com/r/pokemon/comments/1s16ht/651_pokemon_cries_in_wav_and_493_cries_in_mp3_saw/).
