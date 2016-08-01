@@ -140,6 +140,10 @@ var StoreOptions = {
     default: false,
     type: StoreTypes.Boolean
   },
+  lureSoundNotify: {
+    default: false,
+    type: StoreTypes.Boolean
+  },
   showScanned: {
     default: false,
     type: StoreTypes.Boolean
@@ -339,8 +343,10 @@ function initSidebar() {
   $('#pokestops-switch').prop('checked', Store.get('showPokestops'));
   $('#lured-pokestops-only-switch').val(Store.get('showLuredPokestopsOnly'));
   $('#lure-notify-switch').val(Store.get('lureNotify'));
+  $('#lure-sound-notify-switch').val(Store.get('lureNotify'));
   $('#lured-pokestops-only-wrapper').toggle(Store.get('showPokestops'));
   $('#lure-notify-wrapper').toggle(Store.get('showPokestops'));
+  $('#lure-sound-notify-wrapper').toggle(Store.get('showPokestops'));
   $('#geoloc-switch').prop('checked', Store.get('geoLocate'));
   $('#scanned-switch').prop('checked', Store.get('showScanned'));
   $('#sound-switch').prop('checked', Store.get('playSound'));
@@ -531,17 +537,12 @@ function getGoogleSprite(index, sprite, display_height) {
   };
 }
 
-function setupPokemonMarker(item, skipNotification, isBounceDisabled) {
+function setupPokemonMarker(item, skipNotification) {
   // Scale icon size up with the map exponentially
   var icon_size = 2 + (map.getZoom() - 3) * (map.getZoom() - 3) * .2 + Store.get('iconSizeModifier');
   var pokemon_index = item.pokemon_id - 1;
   var sprite = pokemon_sprites[Store.get('pokemonIcons')] || pokemon_sprites['highres']
   var icon = getGoogleSprite(pokemon_index, sprite, icon_size);
-
-  var animationDisabled = false;
-  if (isBounceDisabled == true) {
-    animationDisabled = true;
-  }
 
   var marker = new google.maps.Marker({
     position: {
@@ -551,13 +552,7 @@ function setupPokemonMarker(item, skipNotification, isBounceDisabled) {
     zIndex: 9999,
     optimized: false,
     map: map,
-    icon: icon,
-    animationDisabled: animationDisabled,
-  });
-
-  marker.addListener('click', function() {
-    this.setAnimation(null);
-    this.animationDisabled = true;
+    icon: icon
   });
 
   marker.infoWindow = new google.maps.InfoWindow({
@@ -571,9 +566,6 @@ function setupPokemonMarker(item, skipNotification, isBounceDisabled) {
         audio.play();
       }
       sendNotification('A wild ' + item.pokemon_name + ' appeared!', 'Click to load map', 'static/icons/' + item.pokemon_id + '.png', item.latitude, item.longitude);
-    }
-    if (marker.animationDisabled != true) {
-      marker.setAnimation(google.maps.Animation.BOUNCE);
     }
   }
 
@@ -626,8 +618,11 @@ function setupPokestopMarker(item) {
 
   // Play sound when lure becomes active
   if (Store.get('lureNotify') && imagename === 'PstopLured') {
-    var lureSound = new Audio('/static/sounds/level-up.mp3');
-    lureSound.play();
+    if (Store.get('lureSoundNotify')) {
+      var lureSound = new Audio('/static/sounds/level-up.mp3');
+      lureSound.play();
+    }
+    sendNotification('A lure has been activated at a nearby stop!', 'Click to load map', 'static/images/lure.jpg', item.latitude, item.longitude);
   }
 
   addListeners(marker);
@@ -932,7 +927,7 @@ function redrawPokemon(pokemon_list) {
   $.each(pokemon_list, function(key, value) {
     var item = pokemon_list[key];
     if (!item.hidden) {
-      var new_marker = setupPokemonMarker(item, skipNotification, this.marker.animationDisabled);
+      var new_marker = setupPokemonMarker(item, skipNotification);
       item.marker.setMap(null);
       pokemon_list[key].marker = new_marker;
     }
@@ -1239,7 +1234,7 @@ $(function() {
     var options = {
         'duration': 500
       },
-      wrappers = $('#lured-pokestops-only-wrapper, #lure-notify-wrapper');
+      wrappers = $('#lured-pokestops-only-wrapper, #lure-notify-wrapper, #lure-sound-notify-wrapper');
     if (this.checked) {
       wrappers.show(options);
     } else {
@@ -1255,6 +1250,10 @@ $(function() {
 
   $('#lure-notify-switch').change(function() {
     Store.set("lureNotify", this.checked);
+  });
+
+  $('#lure-sound-notify-switch').change(function() {
+    Store.set("lureSoundNotify", this.checked);
   });
 
   $('#sound-switch').change(function() {
